@@ -1,0 +1,4 @@
+[submodule "Jasmine"]
+	path = Jasmine
+	url = https://github.com/mkirsche/Jasmine.git
+	branch = dev
