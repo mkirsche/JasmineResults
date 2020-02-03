@@ -83,6 +83,9 @@ for partitionCategory, value in data.items():
   plt.legend([plotOrder[partitionCategory][i] for i in range(0, len(plotOrder[partitionCategory]))])
   plt.xticks(np.arange(len(bars)), suppVecs)
   plt.title('Sample Specific SVs by ' + partitionCategory)
-  plt.show() # TODO output to file with name based on partitionCategory string
+  
+  # Output plot to file with name based on partition category
+  fn = partitionCategory.replace(' ', '').lower() + '.png'
+  plt.savefig(fn)
       
 print(data)
