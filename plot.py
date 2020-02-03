@@ -18,7 +18,8 @@ for each support vector:
       <name of partition>
       <number of values of that partition> followed by <value count> for each value, all space-separated 
 '''
-
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sys

@@ -1,3 +1,6 @@
+/*
+ * Gets the results of pairwise merging partitioned by the properties listed in VariantSet.java
+ */
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.*;
@@ -6,8 +9,11 @@ public static void main(String[] args) throws Exception
 {
 	String fn = "/home/mkirsche/eclipse-workspace/Jasmine/entex.vcf";
 	String ofn = "pair.txt";
-	//String fn = args[0];
-	//String ofn = args[1];
+	if(args.length == 2)
+	{
+		//String fn = args[0];
+		//String ofn = args[1];
+	}
 	TreeMap<String, VariantSet> bySuppVec = VariantSet.fromFile(fn, false);
 	int firstOnly = bySuppVec.getOrDefault("10", new VariantSet()).size;
 	int secondOnly = bySuppVec.getOrDefault("01", new VariantSet()).size;
