@@ -67,7 +67,9 @@ for partitionCategory, value in data.items():
   bars = []
   colorNames = [plotOrder[partitionCategory][i] for i in range(0, len(plotOrder[partitionCategory]))]
   barNames = []
-  for suppVec, freqMap in value.items():
+  for j in range(0, len(suppVecs)):
+    suppVec = suppVecs[j]
+    freqMap = value[suppVec]
     stack = [0 for i in range(0, len(plotOrder[partitionCategory]))]
     for partitionValue, count in freqMap.items():
       stack[seenValues[partitionCategory][partitionValue]] = count

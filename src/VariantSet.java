@@ -87,4 +87,48 @@ public class VariantSet
 		
 		return res;
 	}
+	
+	/*
+	 * A method for getting a map from each (optionally extended) support vector to all variants in the
+	 * file which have that support vector 
+	 */
+	static TreeMap<String, VariantSet> fromFileSpecific(String fn, boolean useExtended) throws Exception
+	{
+		TreeMap<String, VariantSet> res = new TreeMap<String, VariantSet>();
+		Scanner input = new Scanner(new FileInputStream(new File(fn)));
+		while(input.hasNext())
+		{
+			String line = input.nextLine();
+			if(line.length() == 0 || line.startsWith("#"))
+			{
+				continue;
+			}
+			VcfEntry entry = VcfEntry.fromLine(line);
+			String suppVec = useExtended ? entry.getInfo("SUPP_VEC_EXT") : entry.getInfo("SUPP_VEC");
+			
+			AddGenotypes.VariantFormatField gt = new AddGenotypes.VariantFormatField(line);
+			String[] isSpecifics = new String[gt.numSamples()];
+			for(int i = 0; i<isSpecifics.length; i++)
+			{
+				isSpecifics[i] = gt.getValue(i, "IS");
+			}
+
+			// If non-specific in every individual, ignore it
+			boolean isSpecific = false;
+			for(int i = 0; i<isSpecifics.length; i++)
+			{
+				if(isSpecifics[i].equals("1")) isSpecific = true;
+			}
+			if(!isSpecific)
+			{
+				continue;
+			}
+			
+			res.putIfAbsent(suppVec, new VariantSet());
+			res.get(suppVec).addVariant(entry);
+		}
+		input.close();
+		
+		return res;
+	}
 }
