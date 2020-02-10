@@ -6,6 +6,11 @@ public static void main(String[] args) throws Exception
 {
 	String fn = "/home/mkirsche/giab/merged_gt.vcf";
 	String ofn = "trio.txt";
+	if(args.length == 2)
+	{
+		fn = args[0];
+		ofn = args[1];
+	}
 	TreeMap<String, VariantSet> bySuppVec = requireSpecific ? VariantSet.fromFileSpecific(fn, false) : VariantSet.fromFile(fn, false);
 	int firstOnly = bySuppVec.getOrDefault("100", new VariantSet()).size;
 	int secondOnly = bySuppVec.getOrDefault("011", new VariantSet()).size;
@@ -45,21 +50,15 @@ static void mendelianDiscordance(String fn) throws Exception
 		if(line.length() == 0 || line.startsWith("#")) continue;
 		VcfEntry entry = VcfEntry.fromLine(line);
 		String support = entry.getInfo("SUPP_VEC");
-		AddGenotypes.VariantFormatField gt = new AddGenotypes.VariantFormatField(line);
-		String[] isSpecifics = new String[gt.numSamples()];
-		for(int i = 0; i<isSpecifics.length; i++)
-		{
-			isSpecifics[i] = gt.getValue(i, "IS");
-		}
 		
 		// If non-specific in both parents, ignore it
-		if(!isSpecifics[0].equals("1") && !isSpecifics[1].equals("1") && !isSpecifics[2].equals("1"))
+		if(!entry.getInfo("IS_SPECIFIC").equals("1"))
 		{
 			filtered++;
 			continue;
 		}
 		
-		if(support.equals("011"))
+		if(support.equals("100"))
 		{
 			bad++;
 			count++;
