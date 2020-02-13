@@ -20,13 +20,20 @@ for each support vector:
 '''
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sys
 import numpy as np
 
 fn = sys.argv[1]
-data = {} # Map structure will be (Partition category e.g. SVTYPE, Support vector, Partition value e.g., INS, count)
+
+# Let the user specify an output file prefix as a command line argument, but default to none
+ofn = ''
+if(len(sys.argv) > 2):
+  ofn = sys.argv[2] + '_'
+
+data = {} # Map structure will be (Partition category e.g. SVTYPE, Support vector, Partition value e.g. INS, count)
 plotOrder = {} # Similar map but without support vectors: {Partition category, index, partition value}
 seenValues = {} # Used to speed up the plotOrder data structure accesses: {Partition category, partition value, 1 if present}
 suppVecs = [] # List of all support vectors
@@ -62,8 +69,8 @@ print(plotOrder)
 print(seenValues)
 
 # Create the stacked bar plots
-sns.set() 
 for partitionCategory, value in data.items():
+  sns.set() 
   bars = []
   colorNames = [plotOrder[partitionCategory][i] for i in range(0, len(plotOrder[partitionCategory]))]
   barNames = []
@@ -80,15 +87,16 @@ for partitionCategory, value in data.items():
   for i in range(0, len(colorNames)):
     print([bars[j][i] for j in range(0, len(bars))])
     dataToPlot = [bars[j][i] for j in range(0, len(bars))]
-    plt.bar(np.arange(len(bars)), dataToPlot, bottom=plotTotals, width = 0.25)
+    plt.bar(np.arange(len(bars)), dataToPlot, bottom=plotTotals, width = 0.25, edgecolor="none", color = sns.color_palette()[i])
     for j in range(0, len(bars)):
       plotTotals[j] += dataToPlot[j]
-  plt.legend([plotOrder[partitionCategory][i] for i in range(0, len(plotOrder[partitionCategory]))])
+  patches = [mpatches.Patch(color=sns.color_palette()[i], label=plotOrder[partitionCategory][i]) for i in range(0, len(plotOrder[partitionCategory]))]
+  plt.legend(handles=patches)
   plt.xticks(np.arange(len(bars)), suppVecs)
   plt.title('Sample Specific SVs by ' + partitionCategory)
   
   # Output plot to file with name based on partition category
-  fn = partitionCategory.replace(' ', '').lower() + '.png'
+  fn = ofn + partitionCategory.replace(' ', '').lower() + '.png'
   plt.savefig(fn)
       
 print(data)

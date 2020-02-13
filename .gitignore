@@ -3,4 +3,9 @@
 .settings/
 bin/
 pair.txt
-
+*.txt
+*/*.class
+*.png
+merged/
+output/
+*.vcf
