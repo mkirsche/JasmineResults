@@ -3,14 +3,14 @@ import java.io.*;
 public class FindNearestVariants {
 public static void main(String[] args) throws Exception
 {
-	String toCheckFn = "/home/mkirsche/giab/discordantinsertions.vcf";
+	String toCheckFn = "/home/mkirsche/mendelian/discordantinsertions.vcf";
 	String[] otherVcfs = new String[] {
-		"/home/mkirsche/giab/hg002.vcf",
-		"/home/mkirsche/giab/hg003.vcf",
-		"/home/mkirsche/giab/hg004.vcf"
+		"/home/mkirsche/mendelian/HG00733_PBCCS_sniffles.s2l20.refined.nSVtypes.vcf",
+		"/home/mkirsche/mendelian/HG00731_PBCCS_sniffles.s2l20.refined.nSVtypes.vcf",
+		"/home/mkirsche/mendelian/HG00732_PBCCS_sniffles.s2l20.refined.nSVtypes.vcf"
 	};
 	
-	String[] names = new String[] {"hg002", "hg003", "hg004"};
+	String[] names = new String[] {"hg00733", "hg00731", "hg00732"};
 	
 	VariantMap[] maps = new VariantMap[otherVcfs.length];
 	for(int i = 0; i<otherVcfs.length; i++) maps[i] = new VariantMap(otherVcfs[i]);

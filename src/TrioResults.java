@@ -2,16 +2,30 @@ import java.util.*;
 import java.io.*;
 public class TrioResults {
 	static boolean requireSpecific = true;
+	static boolean requirePrecise = true;
 public static void main(String[] args) throws Exception
 {
-	String fn = "/home/mkirsche/giab/merged_gt.vcf";
-	String ofn = "trio.txt";
-	if(args.length == 2)
+	String fn = "/home/mkirsche/mendelian/ash_ont.merged.vcf";
+	String ofn = "ash_ont_precise_trio.txt";
+	if(args.length >= 2)
 	{
 		fn = args[0];
 		ofn = args[1];
+		requireSpecific = false;
+		requirePrecise = false;
+		for(int i = 2; i<args.length; i++)
+		{
+			if(args[i].toLowerCase().endsWith("require_specific"))
+			{
+				requireSpecific = true;
+			}
+			if(args[i].toLowerCase().endsWith("require_precise"))
+			{
+				requirePrecise = true;
+			}
+		}
 	}
-	TreeMap<String, VariantSet> bySuppVec = requireSpecific ? VariantSet.fromFileSpecific(fn, false) : VariantSet.fromFile(fn, false);
+	TreeMap<String, VariantSet> bySuppVec = requireSpecific ? VariantSet.fromFileSpecific(fn, false, requirePrecise) : VariantSet.fromFile(fn, false);
 	int firstOnly = bySuppVec.getOrDefault("100", new VariantSet()).size;
 	int secondOnly = bySuppVec.getOrDefault("011", new VariantSet()).size;
 	int both = bySuppVec.getOrDefault("111", new VariantSet()).size;

@@ -92,7 +92,7 @@ public class VariantSet
 	 * A method for getting a map from each (optionally extended) support vector to all variants in the
 	 * file which have that support vector 
 	 */
-	static TreeMap<String, VariantSet> fromFileSpecific(String fn, boolean useExtended) throws Exception
+	static TreeMap<String, VariantSet> fromFileSpecific(String fn, boolean useExtended, boolean requirePrecise) throws Exception
 	{
 		TreeMap<String, VariantSet> res = new TreeMap<String, VariantSet>();
 		Scanner input = new Scanner(new FileInputStream(new File(fn)));
@@ -120,6 +120,11 @@ public class VariantSet
 				if(isSpecifics[i].equals("1")) isSpecific = true;
 			}
 			if(!isSpecific)
+			{
+				continue;
+			}
+			
+			if(requirePrecise && !entry.tabTokens[7].startsWith("PRECISE;"))
 			{
 				continue;
 			}
